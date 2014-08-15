@@ -1,7 +1,7 @@
-E:\My Folder\Code\GetTorrentFile\GetTorrentFile\obj\Debug\GetTorrentFile.Form1.resources
 E:\My Folder\Code\GetTorrentFile\GetTorrentFile\obj\Debug\GetTorrentFile.Properties.Resources.resources
 E:\My Folder\Code\GetTorrentFile\GetTorrentFile\obj\Debug\GetTorrentFile.csproj.GenerateResource.Cache
 E:\My Folder\Code\GetTorrentFile\GetTorrentFile\bin\Debug\Download Torrent File.exe
 E:\My Folder\Code\GetTorrentFile\GetTorrentFile\bin\Debug\Download Torrent File.pdb
 E:\My Folder\Code\GetTorrentFile\GetTorrentFile\obj\Debug\Download Torrent File.exe
 E:\My Folder\Code\GetTorrentFile\GetTorrentFile\obj\Debug\Download Torrent File.pdb
+E:\My Folder\Code\GetTorrentFile\GetTorrentFile\obj\Debug\GetTorrentFile.MainDialog.resources

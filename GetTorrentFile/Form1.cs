@@ -14,13 +14,13 @@ using System.Windows.Forms;
 
 namespace GetTorrentFile
 {
-    public partial class Form1 : Form
+    public partial class MainDialog : Form
     {
         private const string magnet_uri_reg_ex = @"magnet:\?xt=urn:btih:(?<hash>.*?)&dn=(?<filename>.*?)&as=(?<download>.*?)";
         private static Dictionary<string, string> Magnet_Uri_Details = new Dictionary<string, string>();
         private static string DownloadLocation = Application.StartupPath + @"\Torrents\";
 
-        public Form1()
+        public MainDialog()
         {
             InitializeComponent();
         }
@@ -92,7 +92,7 @@ namespace GetTorrentFile
             }
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void MainDialog_Load(object sender, EventArgs e)
         {
             try
             {
