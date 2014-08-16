@@ -130,11 +130,11 @@ namespace GetTorrentFile
                 foreach (string IndSegments in magnet_uri_segments)
                 {
                     if (IndSegments.ToUpper().Contains("URN:BTIH:"))
-                        RetVal.Add("HASH", IndSegments.Substring(IndSegments.ToUpper().Trim().IndexOf("URN:BTIH:") + 9).ToUpper());
+                        RetVal.Add("HASH", HttpUtility.UrlDecode(IndSegments.Substring(IndSegments.ToUpper().Trim().IndexOf("URN:BTIH:") + 9).ToUpper()));
                     else if (IndSegments.ToUpper().StartsWith("DN="))
-                        RetVal.Add("FILENAME", IndSegments.Substring(IndSegments.ToUpper().Trim().IndexOf("DN=") + 3));
+                        RetVal.Add("FILENAME", HttpUtility.UrlDecode(IndSegments.Substring(IndSegments.ToUpper().Trim().IndexOf("DN=") + 3)));
                     else if (IndSegments.ToUpper().StartsWith("AS="))
-                        RetVal.Add("DOWNLOAD_URL", IndSegments.Substring(IndSegments.ToUpper().Trim().IndexOf("AS=") + 3));                   
+                        RetVal.Add("DOWNLOAD_URL", HttpUtility.UrlDecode(IndSegments.Substring(IndSegments.ToUpper().Trim().IndexOf("AS=") + 3)));
                 }
             }
             return RetVal;
