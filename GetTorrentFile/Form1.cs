@@ -1,10 +1,11 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -76,15 +77,37 @@ namespace GetTorrentFile
                 else
                     FileName = Magnet_Uri_Details["HASH"].ToUpper().Trim();
 
-                string TorrentFileName = DownloadLocation + "" + FileName + ".torrent";
+                string TempTorrentFileName = DownloadLocation + "" + Magnet_Uri_Details["HASH"].ToUpper().Trim() + ".torrent";
+                string ActuTorrentFileName = DownloadLocation + "" + FileName + ".torrent";
 
-                if (!File.Exists(TorrentFileName))
+                if (!File.Exists(TempTorrentFileName))
                 {
-                    WebClient DownloadClient = new WebClient();
-                    DownloadClient.DownloadFile(DownloadUrl, TorrentFileName);
-                }
-                LnkLbl_Open.Visible = true;
+                    HttpWebRequest DownloadClient = (HttpWebRequest)WebRequest.Create(DownloadUrl);
+                    {
+                        DownloadClient.Method = "GET";                       
+                        DownloadClient.Credentials = CredentialCache.DefaultCredentials;  
+                        DownloadClient.Headers.Add("Accept-Encoding", "gzip,deflate");
+                        WebResponse resp = DownloadClient.GetResponse();
+                        if (resp != null && resp.ContentLength > 0)
+                        {
+                            Stream memrystrm = resp.GetResponseStream();
+                            if (memrystrm != null)
+                            {
+                                if (resp.Headers["Content-Encoding"].ToLower().Contains("gzip"))
+                                    memrystrm = new GZipStream(memrystrm, CompressionMode.Decompress);
+                                else if (resp.Headers["Content-Encoding"].ToLower().Contains("deflate"))
+                                    memrystrm = new DeflateStream(memrystrm, CompressionMode.Decompress);
 
+                                using (var fileStream = new FileStream(TempTorrentFileName, FileMode.Create, FileAccess.Write))
+                                {
+                                    memrystrm.CopyTo(fileStream);
+                                }
+                            }
+                        }
+                    }
+                }
+                File.Move(TempTorrentFileName, ActuTorrentFileName);
+                LnkLbl_Open.Visible = true;  
             }
             catch (Exception ex)
             {
@@ -130,11 +153,11 @@ namespace GetTorrentFile
                 foreach (string IndSegments in magnet_uri_segments)
                 {
                     if (IndSegments.ToUpper().Contains("URN:BTIH:"))
-                        RetVal.Add("HASH", HttpUtility.UrlDecode(IndSegments.Substring(IndSegments.ToUpper().Trim().IndexOf("URN:BTIH:") + 9).ToUpper()));
+                        RetVal.Add("HASH", IndSegments.Substring(IndSegments.ToUpper().Trim().IndexOf("URN:BTIH:") + 9).ToUpper());
                     else if (IndSegments.ToUpper().StartsWith("DN="))
                         RetVal.Add("FILENAME", HttpUtility.UrlDecode(IndSegments.Substring(IndSegments.ToUpper().Trim().IndexOf("DN=") + 3)));
                     else if (IndSegments.ToUpper().StartsWith("AS="))
-                        RetVal.Add("DOWNLOAD_URL", HttpUtility.UrlDecode(IndSegments.Substring(IndSegments.ToUpper().Trim().IndexOf("AS=") + 3)));
+                        RetVal.Add("DOWNLOAD_URL", IndSegments.Substring(IndSegments.ToUpper().Trim().IndexOf("AS=") + 3));
                 }
             }
             return RetVal;
