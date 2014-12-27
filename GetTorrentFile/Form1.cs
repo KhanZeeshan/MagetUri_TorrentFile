@@ -77,6 +77,15 @@ namespace GetTorrentFile
                 else
                     FileName = Magnet_Uri_Details["HASH"].ToUpper().Trim();
 
+                //Zack
+                //Date: 12/27/2014
+                //To Remove Invalid Characters
+                while (FileName.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
+                {
+                    int _index = FileName.IndexOfAny(Path.GetInvalidFileNameChars());
+                    FileName = FileName.Remove(_index, 1);
+                }
+
                 string TempTorrentFileName = DownloadLocation + "" + Magnet_Uri_Details["HASH"].ToUpper().Trim() + ".torrent";
                 string ActuTorrentFileName = DownloadLocation + "" + FileName + ".torrent";
 
@@ -84,8 +93,8 @@ namespace GetTorrentFile
                 {
                     HttpWebRequest DownloadClient = (HttpWebRequest)WebRequest.Create(DownloadUrl);
                     {
-                        DownloadClient.Method = "GET";                       
-                        DownloadClient.Credentials = CredentialCache.DefaultCredentials;  
+                        DownloadClient.Method = "GET";
+                        DownloadClient.Credentials = CredentialCache.DefaultCredentials;
                         DownloadClient.Headers.Add("Accept-Encoding", "gzip,deflate");
                         WebResponse resp = DownloadClient.GetResponse();
                         if (resp != null && resp.ContentLength > 0)
@@ -107,7 +116,7 @@ namespace GetTorrentFile
                     }
                 }
                 File.Move(TempTorrentFileName, ActuTorrentFileName);
-                LnkLbl_Open.Visible = true;  
+                LnkLbl_Open.Visible = true;
             }
             catch (Exception ex)
             {
